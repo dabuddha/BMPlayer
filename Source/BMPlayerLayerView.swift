@@ -340,10 +340,10 @@ open class BMPlayerLayerView: UIView {
                                    totalTime: CMTimeGetSeconds(playerItem.duration))
             }
             
-            self.state = .playedToTheEnd
             self.isPlaying = false
             self.playDidEnd = true
             self.timer?.invalidate()
+            self.state = .playedToTheEnd
         }
     }
     
