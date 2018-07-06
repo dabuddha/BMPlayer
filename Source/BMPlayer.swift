@@ -114,7 +114,7 @@ open class BMPlayer: UIView {
      - parameter resource:        media resource
      - parameter definitionIndex: starting definition index, default start with the first definition
      */
-    open func setVideo(resource: BMPlayerResource, definitionIndex: Int = 0) {
+    open func setVideo(resource: BMPlayerResource, definitionIndex: Int = 0, local: Bool = false) {
         isURLSet = false
         self.resource = resource
         
@@ -124,7 +124,14 @@ open class BMPlayer: UIView {
         if BMPlayerConf.shouldAutoPlay {
             isURLSet = true
             let asset = resource.definitions[definitionIndex]
-            playerLayer?.playAsset(asset: asset.avURLAsset)
+            var urlAsset: AVURLAsset
+            if local {
+                urlAsset = AVURLAsset(url: asset.url)
+            }
+            else {
+                urlAsset = asset.avURLAsset
+            }
+            playerLayer?.playAsset(asset: urlAsset)
         } else {
             controlView.showCover(url: resource.cover)
             controlView.hideLoader()
@@ -143,13 +150,20 @@ open class BMPlayer: UIView {
     /**
      Play
      */
-    open func play() {
+    open func play(local: Bool = false) {
         if resource == nil {
             return
         }
         if !isURLSet {
             let asset = resource.definitions[currentDefinition]
-            playerLayer?.playAsset(asset: asset.avURLAsset)
+            var urlAsset: AVURLAsset
+            if local {
+                urlAsset = AVURLAsset(url: asset.url)
+            }
+            else {
+                urlAsset = asset.avURLAsset
+            }
+            playerLayer?.playAsset(asset: urlAsset)
             controlView.hideCoverImageView()
             isURLSet                = true
         }
